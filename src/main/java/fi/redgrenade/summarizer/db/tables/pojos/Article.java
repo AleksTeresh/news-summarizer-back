@@ -23,13 +23,14 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Article implements Serializable {
 
-    private static final long serialVersionUID = 482360388;
+    private static final long serialVersionUID = -2028658257;
 
     private Long      id;
     private String    content;
     private String    header;
     private String    summary;
     private Timestamp timestamp;
+    private Timestamp rowcreatetime;
 
     public Article() {}
 
@@ -39,6 +40,7 @@ public class Article implements Serializable {
         this.header = value.header;
         this.summary = value.summary;
         this.timestamp = value.timestamp;
+        this.rowcreatetime = value.rowcreatetime;
     }
 
     public Article(
@@ -46,13 +48,15 @@ public class Article implements Serializable {
         String    content,
         String    header,
         String    summary,
-        Timestamp timestamp
+        Timestamp timestamp,
+        Timestamp rowcreatetime
     ) {
         this.id = id;
         this.content = content;
         this.header = header;
         this.summary = summary;
         this.timestamp = timestamp;
+        this.rowcreatetime = rowcreatetime;
     }
 
     public Long getId() {
@@ -95,6 +99,14 @@ public class Article implements Serializable {
         this.timestamp = timestamp;
     }
 
+    public Timestamp getRowcreatetime() {
+        return this.rowcreatetime;
+    }
+
+    public void setRowcreatetime(Timestamp rowcreatetime) {
+        this.rowcreatetime = rowcreatetime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Article (");
@@ -104,6 +116,7 @@ public class Article implements Serializable {
         sb.append(", ").append(header);
         sb.append(", ").append(summary);
         sb.append(", ").append(timestamp);
+        sb.append(", ").append(rowcreatetime);
 
         sb.append(")");
         return sb.toString();

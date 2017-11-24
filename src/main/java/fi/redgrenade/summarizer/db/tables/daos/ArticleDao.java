@@ -92,4 +92,11 @@ public class ArticleDao extends DAOImpl<ArticleRecord, fi.redgrenade.summarizer.
     public List<fi.redgrenade.summarizer.db.tables.pojos.Article> fetchByTimestamp(Timestamp... values) {
         return fetch(Article.ARTICLE.TIMESTAMP, values);
     }
+
+    /**
+     * Fetch records that have <code>rowCreateTime IN (values)</code>
+     */
+    public List<fi.redgrenade.summarizer.db.tables.pojos.Article> fetchByRowcreatetime(Timestamp... values) {
+        return fetch(Article.ARTICLE.ROWCREATETIME, values);
+    }
 }
