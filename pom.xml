@@ -198,7 +198,7 @@
                         <configuration>
                             <jdbc>
                                 <driver>org.postgresql.Driver</driver>
-                                <url>jdbc:postgresql://localhost:5432/classical</url>
+                                <url>jdbc:postgresql://localhost:5432/summarizer</url>
                                 <user>postgres</user>
                                 <password></password>
                             </jdbc>
@@ -214,7 +214,7 @@
                                     <inputSchema>public</inputSchema>
                                 </database>
                                 <target>
-                                    <packageName>fi.alekster.classical.db</packageName>
+                                    <packageName>fi.redgrenade.summarizer.db</packageName>
                                     <directory>src/main/java</directory>
                                 </target>
                             </generator>

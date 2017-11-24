@@ -6,7 +6,37 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     <changeSet id="1" author="Aleksandr Tereshchenko">
+        <createTable tableName="article">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="content" type="clob">
+                <constraints nullable="false" />
+            </column>
+            <column name="header" type="varchar(511)">
+                <constraints nullable="true" />
+            </column>
+            <column name="summary" type="clob">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
 
+        <createTable tableName="key_word">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="word" type="varchar(511)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
 
+        <createTable tableName="article_key_word">
+            <column name="article_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="key_word_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+        </createTable>
     </changeSet>
 </databaseChangeLog>
