@@ -151,4 +151,8 @@ if limit > len(keywords):
         results.append(keywords[i][0])
     for j in range(limit - len(keywords)):
         results.append("")
+else:
+    for i in range(limit):
+            results.append(keywords[i][0])
+
 print(json.dumps(results))
