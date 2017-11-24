@@ -8,6 +8,7 @@ import fi.redgrenade.summarizer.db.Keys;
 import fi.redgrenade.summarizer.db.Public;
 import fi.redgrenade.summarizer.db.tables.records.ArticleRecord;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Article extends TableImpl<ArticleRecord> {
 
-    private static final long serialVersionUID = 1377340868;
+    private static final long serialVersionUID = -681425485;
 
     /**
      * The reference instance of <code>public.article</code>
@@ -69,6 +70,11 @@ public class Article extends TableImpl<ArticleRecord> {
      * The column <code>public.article.summary</code>.
      */
     public final TableField<ArticleRecord, String> SUMMARY = createField("summary", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.article.timestamp</code>.
+     */
+    public final TableField<ArticleRecord, Timestamp> TIMESTAMP = createField("timestamp", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * Create a <code>public.article</code> table reference

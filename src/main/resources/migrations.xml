@@ -19,6 +19,9 @@
             <column name="summary" type="clob">
                 <constraints nullable="true" />
             </column>
+            <column name="timestamp" type="datetime" >
+                <constraints nullable="true" />
+            </column>
         </createTable>
 
         <createTable tableName="key_word">

@@ -5,6 +5,7 @@ package fi.redgrenade.summarizer.db.tables.pojos;
 
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 
@@ -22,12 +23,13 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Article implements Serializable {
 
-    private static final long serialVersionUID = 1961175654;
+    private static final long serialVersionUID = 482360388;
 
-    private Long   id;
-    private String content;
-    private String header;
-    private String summary;
+    private Long      id;
+    private String    content;
+    private String    header;
+    private String    summary;
+    private Timestamp timestamp;
 
     public Article() {}
 
@@ -36,18 +38,21 @@ public class Article implements Serializable {
         this.content = value.content;
         this.header = value.header;
         this.summary = value.summary;
+        this.timestamp = value.timestamp;
     }
 
     public Article(
-        Long   id,
-        String content,
-        String header,
-        String summary
+        Long      id,
+        String    content,
+        String    header,
+        String    summary,
+        Timestamp timestamp
     ) {
         this.id = id;
         this.content = content;
         this.header = header;
         this.summary = summary;
+        this.timestamp = timestamp;
     }
 
     public Long getId() {
@@ -82,6 +87,14 @@ public class Article implements Serializable {
         this.summary = summary;
     }
 
+    public Timestamp getTimestamp() {
+        return this.timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Article (");
@@ -90,6 +103,7 @@ public class Article implements Serializable {
         sb.append(", ").append(content);
         sb.append(", ").append(header);
         sb.append(", ").append(summary);
+        sb.append(", ").append(timestamp);
 
         sb.append(")");
         return sb.toString();

@@ -7,6 +7,7 @@ package fi.redgrenade.summarizer.db.tables.daos;
 import fi.redgrenade.summarizer.db.tables.Article;
 import fi.redgrenade.summarizer.db.tables.records.ArticleRecord;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -83,5 +84,12 @@ public class ArticleDao extends DAOImpl<ArticleRecord, fi.redgrenade.summarizer.
      */
     public List<fi.redgrenade.summarizer.db.tables.pojos.Article> fetchBySummary(String... values) {
         return fetch(Article.ARTICLE.SUMMARY, values);
+    }
+
+    /**
+     * Fetch records that have <code>timestamp IN (values)</code>
+     */
+    public List<fi.redgrenade.summarizer.db.tables.pojos.Article> fetchByTimestamp(Timestamp... values) {
+        return fetch(Article.ARTICLE.TIMESTAMP, values);
     }
 }
