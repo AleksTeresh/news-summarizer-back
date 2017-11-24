@@ -4,11 +4,18 @@
 package fi.redgrenade.summarizer.db;
 
 
+import fi.redgrenade.summarizer.db.tables.Article;
+import fi.redgrenade.summarizer.db.tables.ArticleKeyWord;
 import fi.redgrenade.summarizer.db.tables.Databasechangeloglock;
+import fi.redgrenade.summarizer.db.tables.KeyWord;
+import fi.redgrenade.summarizer.db.tables.records.ArticleKeyWordRecord;
+import fi.redgrenade.summarizer.db.tables.records.ArticleRecord;
 import fi.redgrenade.summarizer.db.tables.records.DatabasechangeloglockRecord;
+import fi.redgrenade.summarizer.db.tables.records.KeyWordRecord;
 
 import javax.annotation.Generated;
 
+import org.jooq.Identity;
 import org.jooq.UniqueKey;
 import org.jooq.impl.AbstractKeys;
 
@@ -31,12 +38,18 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
+    public static final Identity<ArticleRecord, Long> IDENTITY_ARTICLE = Identities0.IDENTITY_ARTICLE;
+    public static final Identity<ArticleKeyWordRecord, Long> IDENTITY_ARTICLE_KEY_WORD = Identities0.IDENTITY_ARTICLE_KEY_WORD;
+    public static final Identity<KeyWordRecord, Long> IDENTITY_KEY_WORD = Identities0.IDENTITY_KEY_WORD;
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<ArticleRecord> PK_ARTICLE = UniqueKeys0.PK_ARTICLE;
+    public static final UniqueKey<ArticleKeyWordRecord> PK_ARTICLE_KEY_WORD = UniqueKeys0.PK_ARTICLE_KEY_WORD;
     public static final UniqueKey<DatabasechangeloglockRecord> PK_DATABASECHANGELOGLOCK = UniqueKeys0.PK_DATABASECHANGELOGLOCK;
+    public static final UniqueKey<KeyWordRecord> PK_KEY_WORD = UniqueKeys0.PK_KEY_WORD;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -47,7 +60,16 @@ public class Keys {
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
+    private static class Identities0 extends AbstractKeys {
+        public static Identity<ArticleRecord, Long> IDENTITY_ARTICLE = createIdentity(Article.ARTICLE, Article.ARTICLE.ID);
+        public static Identity<ArticleKeyWordRecord, Long> IDENTITY_ARTICLE_KEY_WORD = createIdentity(ArticleKeyWord.ARTICLE_KEY_WORD, ArticleKeyWord.ARTICLE_KEY_WORD.ARTICLE_ID);
+        public static Identity<KeyWordRecord, Long> IDENTITY_KEY_WORD = createIdentity(KeyWord.KEY_WORD, KeyWord.KEY_WORD.ID);
+    }
+
     private static class UniqueKeys0 extends AbstractKeys {
+        public static final UniqueKey<ArticleRecord> PK_ARTICLE = createUniqueKey(Article.ARTICLE, "pk_article", Article.ARTICLE.ID);
+        public static final UniqueKey<ArticleKeyWordRecord> PK_ARTICLE_KEY_WORD = createUniqueKey(ArticleKeyWord.ARTICLE_KEY_WORD, "pk_article_key_word", ArticleKeyWord.ARTICLE_KEY_WORD.ARTICLE_ID, ArticleKeyWord.ARTICLE_KEY_WORD.KEY_WORD_ID);
         public static final UniqueKey<DatabasechangeloglockRecord> PK_DATABASECHANGELOGLOCK = createUniqueKey(Databasechangeloglock.DATABASECHANGELOGLOCK, "pk_databasechangeloglock", Databasechangeloglock.DATABASECHANGELOGLOCK.ID);
+        public static final UniqueKey<KeyWordRecord> PK_KEY_WORD = createUniqueKey(KeyWord.KEY_WORD, "pk_key_word", KeyWord.KEY_WORD.ID);
     }
 }

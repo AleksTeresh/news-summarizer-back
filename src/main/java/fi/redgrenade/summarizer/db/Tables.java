@@ -4,8 +4,11 @@
 package fi.redgrenade.summarizer.db;
 
 
+import fi.redgrenade.summarizer.db.tables.Article;
+import fi.redgrenade.summarizer.db.tables.ArticleKeyWord;
 import fi.redgrenade.summarizer.db.tables.Databasechangelog;
 import fi.redgrenade.summarizer.db.tables.Databasechangeloglock;
+import fi.redgrenade.summarizer.db.tables.KeyWord;
 
 import javax.annotation.Generated;
 
@@ -24,6 +27,16 @@ import javax.annotation.Generated;
 public class Tables {
 
     /**
+     * The table <code>public.article</code>.
+     */
+    public static final Article ARTICLE = fi.redgrenade.summarizer.db.tables.Article.ARTICLE;
+
+    /**
+     * The table <code>public.article_key_word</code>.
+     */
+    public static final ArticleKeyWord ARTICLE_KEY_WORD = fi.redgrenade.summarizer.db.tables.ArticleKeyWord.ARTICLE_KEY_WORD;
+
+    /**
      * The table <code>public.databasechangelog</code>.
      */
     public static final Databasechangelog DATABASECHANGELOG = fi.redgrenade.summarizer.db.tables.Databasechangelog.DATABASECHANGELOG;
@@ -32,4 +45,9 @@ public class Tables {
      * The table <code>public.databasechangeloglock</code>.
      */
     public static final Databasechangeloglock DATABASECHANGELOGLOCK = fi.redgrenade.summarizer.db.tables.Databasechangeloglock.DATABASECHANGELOGLOCK;
+
+    /**
+     * The table <code>public.key_word</code>.
+     */
+    public static final KeyWord KEY_WORD = fi.redgrenade.summarizer.db.tables.KeyWord.KEY_WORD;
 }
