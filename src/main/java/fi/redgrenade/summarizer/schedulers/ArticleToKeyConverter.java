@@ -71,7 +71,7 @@ public class ArticleToKeyConverter {
                             article.imageurl
                     ));
 
-                    String keywordArrayJsonString = executePythonKeyWordScript(article.body, article.title);
+                    String keywordArrayJsonString = executePythonKeyWordScript(article.body);
                     ArrayList<String> keywords = gson.fromJson(keywordArrayJsonString, ArrayList.class);
 
                     for (String keyword : keywords) {
@@ -110,12 +110,12 @@ public class ArticleToKeyConverter {
         return article;
     }
 
-    private String executePythonKeyWordScript(String articleBody, String articleTitle) throws IOException {
+    private String executePythonKeyWordScript(String articleBody) throws IOException {
         String s = null;
         String result = "";
 
         try {
-            String[] command = new String[]{"python", "rake.py", articleBody, articleTitle, "5"};
+            String[] command = new String[]{"python", "nlu.py", articleBody, "5"};
 
             Process p = Runtime.getRuntime().exec(command);
 
