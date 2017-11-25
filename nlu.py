@@ -2,7 +2,7 @@ import json
 import sys
 from watson_developer_cloud import NaturalLanguageUnderstandingV1
 from watson_developer_cloud import NaturalLanguageUnderstandingV1 as NaturalLanguageUnderstanding
-from watson_developer_cloud.natural_language_understanding_v1 import Features, EntitiesOptions, KeywordsOptions, ConceptsOptions
+from watson_developer_cloud.natural_language_understanding_v1 import Features, EntitiesOptions, KeywordsOptions
 
 natural_language_understanding = NaturalLanguageUnderstandingV1(
   username="d5239c8a-2d28-4008-8b62-d0bbb3c0d8f9",
