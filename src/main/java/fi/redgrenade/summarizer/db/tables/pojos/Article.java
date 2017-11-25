@@ -23,7 +23,7 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Article implements Serializable {
 
-    private static final long serialVersionUID = -2028658257;
+    private static final long serialVersionUID = -1228669193;
 
     private Long      id;
     private String    content;
@@ -31,6 +31,8 @@ public class Article implements Serializable {
     private String    summary;
     private Timestamp timestamp;
     private Timestamp rowcreatetime;
+    private String    category;
+    private String    imageurl;
 
     public Article() {}
 
@@ -41,6 +43,8 @@ public class Article implements Serializable {
         this.summary = value.summary;
         this.timestamp = value.timestamp;
         this.rowcreatetime = value.rowcreatetime;
+        this.category = value.category;
+        this.imageurl = value.imageurl;
     }
 
     public Article(
@@ -49,7 +53,9 @@ public class Article implements Serializable {
         String    header,
         String    summary,
         Timestamp timestamp,
-        Timestamp rowcreatetime
+        Timestamp rowcreatetime,
+        String    category,
+        String    imageurl
     ) {
         this.id = id;
         this.content = content;
@@ -57,6 +63,8 @@ public class Article implements Serializable {
         this.summary = summary;
         this.timestamp = timestamp;
         this.rowcreatetime = rowcreatetime;
+        this.category = category;
+        this.imageurl = imageurl;
     }
 
     public Long getId() {
@@ -107,6 +115,22 @@ public class Article implements Serializable {
         this.rowcreatetime = rowcreatetime;
     }
 
+    public String getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getImageurl() {
+        return this.imageurl;
+    }
+
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Article (");
@@ -117,6 +141,8 @@ public class Article implements Serializable {
         sb.append(", ").append(summary);
         sb.append(", ").append(timestamp);
         sb.append(", ").append(rowcreatetime);
+        sb.append(", ").append(category);
+        sb.append(", ").append(imageurl);
 
         sb.append(")");
         return sb.toString();

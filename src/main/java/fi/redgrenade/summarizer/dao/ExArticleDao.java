@@ -25,17 +25,19 @@ public class ExArticleDao extends ArticleDao {
         this.dsl = dsl;
     }
 
-    public List<Article> fetchwithCreateTimeGreaterThan (Timestamp timestamp) {
+    public List<Article> fetchwithCreateTimeGreaterThan(Timestamp timestamp) {
         return dsl.select()
                 .from(Tables.ARTICLE)
                 .where(Tables.ARTICLE.ROWCREATETIME.gt(timestamp))
                 .fetch(p -> new Article(
-                    p.get(Tables.ARTICLE.ID),
-                    p.get(Tables.ARTICLE.CONTENT),
-                    p.get(Tables.ARTICLE.HEADER),
-                    p.get(Tables.ARTICLE.SUMMARY),
-                    p.get(Tables.ARTICLE.TIMESTAMP),
-                    p.get(Tables.ARTICLE.ROWCREATETIME)
+                        p.get(Tables.ARTICLE.ID),
+                        p.get(Tables.ARTICLE.CONTENT),
+                        p.get(Tables.ARTICLE.HEADER),
+                        p.get(Tables.ARTICLE.SUMMARY),
+                        p.get(Tables.ARTICLE.TIMESTAMP),
+                        p.get(Tables.ARTICLE.ROWCREATETIME),
+                        p.get(Tables.ARTICLE.CATEGORY),
+                        p.get(Tables.ARTICLE.IMAGEURL)
                 ));
     }
 }

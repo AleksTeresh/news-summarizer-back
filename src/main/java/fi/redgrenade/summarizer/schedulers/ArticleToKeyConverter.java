@@ -1,8 +1,11 @@
 package fi.redgrenade.summarizer.schedulers;
 
 import com.google.gson.Gson;
+import fi.redgrenade.summarizer.dao.ExArticleDao;
 import fi.redgrenade.summarizer.dao.ExArticleKeyWordDao;
 import fi.redgrenade.summarizer.dao.ExKeyWordDao;
+import fi.redgrenade.summarizer.db.tables.pojos.ArticleKeyWord;
+import fi.redgrenade.summarizer.db.tables.pojos.KeyWord;
 import fi.redgrenade.summarizer.schedulers.models.Article;
 import org.jooq.util.derby.sys.Sys;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +17,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -25,12 +31,14 @@ import java.util.Scanner;
 public class ArticleToKeyConverter {
     private ExKeyWordDao keyWordDao;
     private ExArticleKeyWordDao articleKeyWordDao;
+    private ExArticleDao articleDao;
     private Gson gson;
 
     @Autowired
-    public ArticleToKeyConverter(ExKeyWordDao keyWordDao, ExArticleKeyWordDao articleKeyWordDao) {
-        File[] articleFiles = getFileList();
-        Date timeStamp = new Date();
+    public ArticleToKeyConverter(ExArticleDao articleDao, ExKeyWordDao keyWordDao, ExArticleKeyWordDao articleKeyWordDao) {
+        this.keyWordDao = keyWordDao;
+        this.articleDao = articleDao;
+        this.articleKeyWordDao = articleKeyWordDao;
         gson = new Gson();
     }
 
@@ -51,7 +59,38 @@ public class ArticleToKeyConverter {
                 if (view.creationTime().toInstant().compareTo(timeStamp.toInstant().minusSeconds(6000000)) > 0) {
                     Article article = parseArticleFile(filePath);
 
-                    executePythonKeyWordScript(article.body, article.title);
+                    Long articleId = articleDao.count() + 1;
+                    articleDao.insert(new fi.redgrenade.summarizer.db.tables.pojos.Article(
+                            articleId,
+                            article.body,
+                            article.title,
+                            null,
+                            new Timestamp(article.timestamp.getTime()),
+                            null,
+                            article.category,
+                            article.imageurl
+                    ));
+
+                    String keywordArrayJsonString = executePythonKeyWordScript(article.body, article.title);
+                    ArrayList<String> keywords = gson.fromJson(keywordArrayJsonString, ArrayList.class);
+
+                    for (String keyword : keywords) {
+                        Long keyWordId = null;
+                        List<KeyWord> foundKeyWords = keyWordDao.fetchByWord(keyword);
+
+                        if( foundKeyWords.size() == 0) {
+                            keyWordId = keyWordDao.count() + 1;
+
+                            keyWordDao.insert(new KeyWord(
+                                    keyWordId,
+                                    keyword
+                            ));
+                        } else {
+                            keyWordId = foundKeyWords.get(0).getId();
+                        }
+
+                        articleKeyWordDao.insert(new ArticleKeyWord(articleId, keyWordId));
+                    }
                 }
             } catch (Exception ex) {
                 System.out.println(ex);
@@ -71,14 +110,12 @@ public class ArticleToKeyConverter {
         return article;
     }
 
-    private void executePythonKeyWordScript(String articleBody, String articleTitle) throws IOException {
+    private String executePythonKeyWordScript(String articleBody, String articleTitle) throws IOException {
         String s = null;
+        String result = "";
 
         try {
-            // run the Unix "ps -ef" command
-            // using the Runtime exec method:
-
-            String[] command = new String[] {"python", "rake.py", articleBody, articleTitle, "5"};
+            String[] command = new String[]{"python", "rake.py", articleBody, articleTitle, "5"};
 
             Process p = Runtime.getRuntime().exec(command);
 
@@ -91,18 +128,20 @@ public class ArticleToKeyConverter {
             // read the output from the command
             System.out.println("Here is the standard output of the command:\n");
             while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
+                result += s;
             }
+            System.out.println(result);
 
             // read any errors from the attempted command
-            System.out.println("Here is the standard error of the command (if any):\n");
-            while ((s = stdError.readLine()) != null) {
-                System.out.println(s);
-            }
-        }
-        catch (IOException e) {
+//            System.out.println("Here is the standard error of the command (if any):\n");
+//            while ((s = stdError.readLine()) != null) {
+//                System.out.println(s);
+//            }
+        } catch (IOException e) {
             System.out.println("exception happened - here's what I know: ");
             e.printStackTrace();
         }
+
+        return result;
     }
 }
