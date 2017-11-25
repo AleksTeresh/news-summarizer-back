@@ -5,6 +5,7 @@ import fi.redgrenade.summarizer.dao.ExKeyWordDao;
 import fi.redgrenade.summarizer.representations.views.KeyWordView;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,13 +31,10 @@ public class KeyWordController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/keywords")
-    public List<KeyWordView> getKeyWords() {
-        return articleKeyWordDao.findAll()
-                .stream()
-                .map(p -> KeyWordView.fromEntity(
-                        keyWordDao.fetchOneById(p.getKeyWordId()),
-                        p.getArticleId()
-                ))
-                .collect(Collectors.toList());
+    public List<KeyWordView> getKeyWords(
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(value = "offset", defaultValue = "0") int offset
+    ) {
+        return articleKeyWordDao.fetchKeyWords(limit, offset);
     }
 }

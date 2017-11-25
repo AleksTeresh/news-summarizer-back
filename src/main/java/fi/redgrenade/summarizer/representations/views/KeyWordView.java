@@ -12,28 +12,32 @@ public class KeyWordView {
     private Long   id;
 
     @JsonProperty
-    private Long articleId;
+    private String word;
 
     @JsonProperty
-    private String word;
+    private int weight;
 
     public KeyWordView () {}
 
     public KeyWordView(
             Long id,
-            Long articleId,
-            String word
+            String word,
+            int weight
     ) {
         this.id = id;
-        this.articleId = articleId;
         this.word = word;
+        this.weight = weight;
     }
 
-    public static KeyWordView fromEntity(KeyWord keyWord, Long articleId) {
+    public static KeyWordView fromEntity(KeyWord keyWord) {
         return new KeyWordView(
                 keyWord.getId(),
-                articleId,
-                keyWord.getWord()
+                keyWord.getWord(),
+                0
         );
+    }
+
+    public void setWord (String word) {
+        this.word = word;
     }
 }
