@@ -1,18 +1,26 @@
 package fi.redgrenade.summarizer.schedulers;
 
+import com.google.gson.Gson;
+import fi.redgrenade.summarizer.dao.ExArticleDao;
 import fi.redgrenade.summarizer.dao.ExArticleKeyWordDao;
 import fi.redgrenade.summarizer.dao.ExKeyWordDao;
+import fi.redgrenade.summarizer.db.tables.pojos.ArticleKeyWord;
+import fi.redgrenade.summarizer.db.tables.pojos.KeyWord;
+import fi.redgrenade.summarizer.schedulers.models.Article;
+import org.jooq.util.derby.sys.Sys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -23,11 +31,15 @@ import java.util.Scanner;
 public class ArticleToKeyConverter {
     private ExKeyWordDao keyWordDao;
     private ExArticleKeyWordDao articleKeyWordDao;
+    private ExArticleDao articleDao;
+    private Gson gson;
 
     @Autowired
-    public ArticleToKeyConverter(ExKeyWordDao keyWordDao, ExArticleKeyWordDao articleKeyWordDao) {
-        File[] articleFiles = getFileList();
-        Date timeStamp = new Date();
+    public ArticleToKeyConverter(ExArticleDao articleDao, ExKeyWordDao keyWordDao, ExArticleKeyWordDao articleKeyWordDao) {
+        this.keyWordDao = keyWordDao;
+        this.articleDao = articleDao;
+        this.articleKeyWordDao = articleKeyWordDao;
+        gson = new Gson();
     }
 
     @Scheduled(cron = "* * * * * *")
@@ -45,8 +57,40 @@ public class ArticleToKeyConverter {
                         .readAttributes();
 
                 if (view.creationTime().toInstant().compareTo(timeStamp.toInstant().minusSeconds(6000000)) > 0) {
-                    String fileContents = new Scanner(new File(filePath)).useDelimiter("\\Z").next();
-                    System.out.println(fileContents);
+                    Article article = parseArticleFile(filePath);
+
+                    Long articleId = articleDao.count() + 1;
+                    articleDao.insert(new fi.redgrenade.summarizer.db.tables.pojos.Article(
+                            articleId,
+                            article.body,
+                            article.title,
+                            null,
+                            new Timestamp(article.timestamp.getTime()),
+                            null,
+                            article.category,
+                            article.imageurl
+                    ));
+
+                    String keywordArrayJsonString = executePythonKeyWordScript(article.body, article.title);
+                    ArrayList<String> keywords = gson.fromJson(keywordArrayJsonString, ArrayList.class);
+
+                    for (String keyword : keywords) {
+                        Long keyWordId = null;
+                        List<KeyWord> foundKeyWords = keyWordDao.fetchByWord(keyword);
+
+                        if( foundKeyWords.size() == 0) {
+                            keyWordId = keyWordDao.count() + 1;
+
+                            keyWordDao.insert(new KeyWord(
+                                    keyWordId,
+                                    keyword
+                            ));
+                        } else {
+                            keyWordId = foundKeyWords.get(0).getId();
+                        }
+
+                        articleKeyWordDao.insert(new ArticleKeyWord(articleId, keyWordId));
+                    }
                 }
             } catch (Exception ex) {
                 System.out.println(ex);
@@ -57,5 +101,47 @@ public class ArticleToKeyConverter {
     private File[] getFileList() {
         File folder = new File("articles");
         return folder.listFiles();
+    }
+
+    private Article parseArticleFile(String articleFilePath) throws FileNotFoundException {
+        String fileContents = new Scanner(new File(articleFilePath)).useDelimiter("\\Z").next();
+        Article article = gson.fromJson(fileContents, Article.class);
+
+        return article;
+    }
+
+    private String executePythonKeyWordScript(String articleBody, String articleTitle) throws IOException {
+        String s = null;
+        String result = "";
+
+        try {
+            String[] command = new String[]{"python", "rake.py", articleBody, articleTitle, "5"};
+
+            Process p = Runtime.getRuntime().exec(command);
+
+            BufferedReader stdInput = new BufferedReader(new
+                    InputStreamReader(p.getInputStream()));
+
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(p.getErrorStream()));
+
+            // read the output from the command
+            System.out.println("Here is the standard output of the command:\n");
+            while ((s = stdInput.readLine()) != null) {
+                result += s;
+            }
+            System.out.println(result);
+
+            // read any errors from the attempted command
+//            System.out.println("Here is the standard error of the command (if any):\n");
+//            while ((s = stdError.readLine()) != null) {
+//                System.out.println(s);
+//            }
+        } catch (IOException e) {
+            System.out.println("exception happened - here's what I know: ");
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }

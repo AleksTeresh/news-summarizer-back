@@ -22,6 +22,15 @@
             <column name="timestamp" type="datetime" >
                 <constraints nullable="true" />
             </column>
+            <column name="rowcreatetime" type="datetime" >
+                <constraints nullable="true" />
+            </column>
+            <column name="category" type="varchar(511)" >
+                <constraints nullable="true" />
+            </column>
+            <column name="imageurl" type="varchar(511)" >
+                <constraints nullable="true" />
+            </column>
         </createTable>
 
         <createTable tableName="key_word">

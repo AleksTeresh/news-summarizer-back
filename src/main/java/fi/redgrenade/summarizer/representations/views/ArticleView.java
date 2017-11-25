@@ -11,7 +11,7 @@ import java.util.List;
 public class ArticleView {
 
     @JsonProperty
-    private Long   id;
+    private Long id;
 
     @JsonProperty
     private String header;
@@ -28,7 +28,14 @@ public class ArticleView {
     @JsonProperty
     private List<String> keyWords;
 
-    public ArticleView () {}
+    @JsonProperty
+    private String category;
+
+    @JsonProperty
+    private String imageurl;
+
+    public ArticleView() {
+    }
 
     public ArticleView(
             Long id,
@@ -36,7 +43,9 @@ public class ArticleView {
             String content,
             String summary,
             Long timestamp,
-            List<String> keyWords
+            List<String> keyWords,
+            String category,
+            String imageurl
     ) {
         this.id = id;
         this.header = header;
@@ -44,6 +53,8 @@ public class ArticleView {
         this.summary = summary;
         this.timestamp = timestamp;
         this.keyWords = keyWords;
+        this.category = category;
+        this.imageurl = imageurl;
     }
 
     public static ArticleView fromEntity(Article article, List<String> keyWords) {
@@ -53,7 +64,9 @@ public class ArticleView {
                 article.getContent(),
                 article.getSummary(),
                 article.getTimestamp().getTime(),
-                keyWords
+                keyWords,
+                article.getCategory(),
+                article.getImageurl()
         );
     }
 }

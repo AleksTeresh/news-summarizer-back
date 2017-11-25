@@ -92,4 +92,25 @@ public class ArticleDao extends DAOImpl<ArticleRecord, fi.redgrenade.summarizer.
     public List<fi.redgrenade.summarizer.db.tables.pojos.Article> fetchByTimestamp(Timestamp... values) {
         return fetch(Article.ARTICLE.TIMESTAMP, values);
     }
+
+    /**
+     * Fetch records that have <code>rowcreatetime IN (values)</code>
+     */
+    public List<fi.redgrenade.summarizer.db.tables.pojos.Article> fetchByRowcreatetime(Timestamp... values) {
+        return fetch(Article.ARTICLE.ROWCREATETIME, values);
+    }
+
+    /**
+     * Fetch records that have <code>category IN (values)</code>
+     */
+    public List<fi.redgrenade.summarizer.db.tables.pojos.Article> fetchByCategory(String... values) {
+        return fetch(Article.ARTICLE.CATEGORY, values);
+    }
+
+    /**
+     * Fetch records that have <code>imageurl IN (values)</code>
+     */
+    public List<fi.redgrenade.summarizer.db.tables.pojos.Article> fetchByImageurl(String... values) {
+        return fetch(Article.ARTICLE.IMAGEURL, values);
+    }
 }
