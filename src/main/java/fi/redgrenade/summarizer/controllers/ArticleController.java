@@ -34,10 +34,12 @@ public class ArticleController {
     public ArticleResponse getArticles(
             @RequestParam(value = "keyWords", defaultValue = "", required = false) List<String> keyWords,
             @RequestParam(value = "limit", defaultValue = "10") int limit,
-            @RequestParam(value = "offset", defaultValue = "0") int offset
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "category", defaultValue = "", required = false) String category
     ) {
         long count = articleDao.count();
-        List<ArticleView> articles = articleDao.findAll().stream()
+        List<ArticleView> articles = articleDao.fetch(keyWords, limit, offset, category)
+                .stream()
                 .map(p -> {
                     List<ArticleKeyWord> articleWordTuples = articleKeyWordDao.fetchByArticleId(p.getId());
                     Long[] articleWordTuplesArray = new Long[articleWordTuples.size()];
