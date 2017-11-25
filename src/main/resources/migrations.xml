@@ -31,6 +31,9 @@
             <column name="imageurl" type="varchar(511)" >
                 <constraints nullable="true" />
             </column>
+            <column name="emotion" type="varchar(1000)" >
+                <constraints nullable="true" />
+            </column>
         </createTable>
 
         <createTable tableName="key_word">

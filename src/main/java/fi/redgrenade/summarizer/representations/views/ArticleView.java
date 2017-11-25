@@ -34,6 +34,9 @@ public class ArticleView {
     @JsonProperty
     private String imageurl;
 
+    @JsonProperty
+    private String emotions;
+
     public ArticleView() {
     }
 
@@ -45,7 +48,8 @@ public class ArticleView {
             Long timestamp,
             List<String> keyWords,
             String category,
-            String imageurl
+            String imageurl,
+            String emotions
     ) {
         this.id = id;
         this.header = header;
@@ -55,6 +59,7 @@ public class ArticleView {
         this.keyWords = keyWords;
         this.category = category;
         this.imageurl = imageurl;
+        this.emotions = emotions;
     }
 
     public static ArticleView fromEntity(Article article, List<String> keyWords) {
@@ -66,7 +71,8 @@ public class ArticleView {
                 article.getTimestamp().getTime(),
                 keyWords,
                 article.getCategory(),
-                article.getImageurl()
+                article.getImageurl(),
+                article.getEmotion()
         );
     }
 }

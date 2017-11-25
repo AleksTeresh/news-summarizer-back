@@ -36,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Article extends TableImpl<ArticleRecord> {
 
-    private static final long serialVersionUID = -12101557;
+    private static final long serialVersionUID = 69143141;
 
     /**
      * The reference instance of <code>public.article</code>
@@ -90,6 +90,11 @@ public class Article extends TableImpl<ArticleRecord> {
      * The column <code>public.article.imageurl</code>.
      */
     public final TableField<ArticleRecord, String> IMAGEURL = createField("imageurl", org.jooq.impl.SQLDataType.VARCHAR.length(511), this, "");
+
+    /**
+     * The column <code>public.article.emotion</code>.
+     */
+    public final TableField<ArticleRecord, String> EMOTION = createField("emotion", org.jooq.impl.SQLDataType.VARCHAR.length(1000), this, "");
 
     /**
      * Create a <code>public.article</code> table reference

@@ -4,10 +4,9 @@
 package fi.redgrenade.summarizer.db.tables.pojos;
 
 
+import javax.annotation.Generated;
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-import javax.annotation.Generated;
 
 
 /**
@@ -23,7 +22,7 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Article implements Serializable {
 
-    private static final long serialVersionUID = -1228669193;
+    private static final long serialVersionUID = -79128540;
 
     private Long      id;
     private String    content;
@@ -33,6 +32,7 @@ public class Article implements Serializable {
     private Timestamp rowcreatetime;
     private String    category;
     private String    imageurl;
+    private String    emotion;
 
     public Article() {}
 
@@ -45,6 +45,7 @@ public class Article implements Serializable {
         this.rowcreatetime = value.rowcreatetime;
         this.category = value.category;
         this.imageurl = value.imageurl;
+        this.emotion = value.emotion;
     }
 
     public Article(
@@ -55,7 +56,8 @@ public class Article implements Serializable {
         Timestamp timestamp,
         Timestamp rowcreatetime,
         String    category,
-        String    imageurl
+        String    imageurl,
+        String    emotion
     ) {
         this.id = id;
         this.content = content;
@@ -65,6 +67,7 @@ public class Article implements Serializable {
         this.rowcreatetime = rowcreatetime;
         this.category = category;
         this.imageurl = imageurl;
+        this.emotion = emotion;
     }
 
     public Long getId() {
@@ -131,6 +134,14 @@ public class Article implements Serializable {
         this.imageurl = imageurl;
     }
 
+    public String getEmotion() {
+        return this.emotion;
+    }
+
+    public void setEmotion(String emotion) {
+        this.emotion = emotion;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Article (");
@@ -143,6 +154,7 @@ public class Article implements Serializable {
         sb.append(", ").append(rowcreatetime);
         sb.append(", ").append(category);
         sb.append(", ").append(imageurl);
+        sb.append(", ").append(emotion);
 
         sb.append(")");
         return sb.toString();

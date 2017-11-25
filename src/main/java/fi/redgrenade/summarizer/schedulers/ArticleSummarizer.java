@@ -3,7 +3,6 @@ package fi.redgrenade.summarizer.schedulers;
 import fi.redgrenade.summarizer.dao.ExArticleDao;
 import fi.redgrenade.summarizer.db.tables.pojos.Article;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
@@ -28,7 +27,7 @@ public class ArticleSummarizer {
         this.articleDao = articleDao;
     }
 
-    @Scheduled(cron = "0 * * * * *")
+  //     @Scheduled(cron = "0 * * * * *")
     public void summarizeArticles () {
         Timestamp referenceTimestamp = new Timestamp(new Date().getTime() - TimeUnit.MINUTES.toMillis(10000)); // TODO: change the number in braces
         List<fi.redgrenade.summarizer.db.tables.pojos.Article> articles =

@@ -7,7 +7,6 @@ import fi.redgrenade.summarizer.dao.ExKeyWordDao;
 import fi.redgrenade.summarizer.db.tables.pojos.ArticleKeyWord;
 import fi.redgrenade.summarizer.db.tables.pojos.KeyWord;
 import fi.redgrenade.summarizer.schedulers.models.Article;
-import org.jooq.util.derby.sys.Sys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -60,6 +59,15 @@ public class ArticleToKeyConverter {
                     Article article = parseArticleFile(filePath);
 
                     Long articleId = articleDao.count() + 1;
+
+
+                    String keywordArrayJsonString = executePythonKeyWordScript(article.body);
+                    // String emotionsJsonString = execPythonEmoScript(article.body);
+
+                    ArrayList<String> keywords = gson.fromJson(keywordArrayJsonString, ArrayList.class);
+                    // ArrayList<String> emotions = gson.fromJson(emotionsJsonString, ArrayList.class);
+
+                    // String[] emtionsArray = new String[emotions.size()];
                     articleDao.insert(new fi.redgrenade.summarizer.db.tables.pojos.Article(
                             articleId,
                             article.body,
@@ -68,11 +76,9 @@ public class ArticleToKeyConverter {
                             new Timestamp(article.timestamp.getTime()),
                             null,
                             article.category,
-                            article.imageurl
+                            article.imageurl,
+                            ""// String.join(", ", emotions.toArray(emtionsArray))
                     ));
-
-                    String keywordArrayJsonString = executePythonKeyWordScript(article.body);
-                    ArrayList<String> keywords = gson.fromJson(keywordArrayJsonString, ArrayList.class);
 
                     for (String keyword : keywords) {
                         Long keyWordId = null;
@@ -91,6 +97,8 @@ public class ArticleToKeyConverter {
 
                         articleKeyWordDao.insert(new ArticleKeyWord(articleId, keyWordId));
                     }
+
+
                 }
             } catch (Exception ex) {
                 System.out.println(ex);
@@ -116,6 +124,41 @@ public class ArticleToKeyConverter {
 
         try {
             String[] command = new String[]{"python", "nlu.py", articleBody, "5"};
+
+            Process p = Runtime.getRuntime().exec(command);
+
+            BufferedReader stdInput = new BufferedReader(new
+                    InputStreamReader(p.getInputStream()));
+
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(p.getErrorStream()));
+
+            // read the output from the command
+            System.out.println("Here is the standard output of the command:\n");
+            while ((s = stdInput.readLine()) != null) {
+                result += s;
+            }
+            System.out.println(result);
+
+            // read any errors from the attempted command
+//            System.out.println("Here is the standard error of the command (if any):\n");
+//            while ((s = stdError.readLine()) != null) {
+//                System.out.println(s);
+//            }
+        } catch (IOException e) {
+            System.out.println("exception happened - here's what I know: ");
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    private String execPythonEmoScript(String articleBody) throws IOException {
+        String s = null;
+        String result = "";
+
+        try {
+            String[] command = new String[]{"python", "emo.py", articleBody};
 
             Process p = Runtime.getRuntime().exec(command);
 

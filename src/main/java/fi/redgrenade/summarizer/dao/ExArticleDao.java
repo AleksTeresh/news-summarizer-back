@@ -1,12 +1,10 @@
 package fi.redgrenade.summarizer.dao;
 
 import fi.redgrenade.summarizer.db.Tables;
-import fi.redgrenade.summarizer.db.tables.ArticleKeyWord;
 import fi.redgrenade.summarizer.db.tables.daos.ArticleDao;
 import fi.redgrenade.summarizer.db.tables.pojos.Article;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.SelectSeekStep1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -41,7 +39,8 @@ public class ExArticleDao extends ArticleDao {
                         p.get(Tables.ARTICLE.TIMESTAMP),
                         p.get(Tables.ARTICLE.ROWCREATETIME),
                         p.get(Tables.ARTICLE.CATEGORY),
-                        p.get(Tables.ARTICLE.IMAGEURL)
+                        p.get(Tables.ARTICLE.IMAGEURL),
+                        p.get(Tables.ARTICLE.EMOTION)
                 ));
     }
 
@@ -81,7 +80,8 @@ public class ExArticleDao extends ArticleDao {
                             p.get(Tables.ARTICLE.TIMESTAMP),
                             p.get(Tables.ARTICLE.ROWCREATETIME),
                             p.get(Tables.ARTICLE.CATEGORY),
-                            p.get(Tables.ARTICLE.IMAGEURL)
+                            p.get(Tables.ARTICLE.IMAGEURL),
+                            p.get(Tables.ARTICLE.EMOTION)
                     )).collect(Collectors.toList());
         } else {
             return dsl.select()
@@ -97,7 +97,8 @@ public class ExArticleDao extends ArticleDao {
                             p.get(Tables.ARTICLE.TIMESTAMP),
                             p.get(Tables.ARTICLE.ROWCREATETIME),
                             p.get(Tables.ARTICLE.CATEGORY),
-                            p.get(Tables.ARTICLE.IMAGEURL)
+                            p.get(Tables.ARTICLE.IMAGEURL),
+                            p.get(Tables.ARTICLE.EMOTION)
                     )).collect(Collectors.toList());
         }
     }

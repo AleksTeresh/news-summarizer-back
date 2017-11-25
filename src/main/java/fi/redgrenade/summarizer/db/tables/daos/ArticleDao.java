@@ -113,4 +113,11 @@ public class ArticleDao extends DAOImpl<ArticleRecord, fi.redgrenade.summarizer.
     public List<fi.redgrenade.summarizer.db.tables.pojos.Article> fetchByImageurl(String... values) {
         return fetch(Article.ARTICLE.IMAGEURL, values);
     }
+
+    /**
+     * Fetch records that have <code>emotion IN (values)</code>
+     */
+    public List<fi.redgrenade.summarizer.db.tables.pojos.Article> fetchByEmotion(String... values) {
+        return fetch(Article.ARTICLE.EMOTION, values);
+    }
 }
