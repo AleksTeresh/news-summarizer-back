@@ -30,7 +30,7 @@ public class ArticleController {
         this.keyWordDao = keyWordDao;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value="/articles")
     public ArticleResponse getArticles(
             @RequestParam(value = "keyWords", defaultValue = "", required = false) List<String> keyWords,
             @RequestParam(value = "limit", defaultValue = "10") int limit,
@@ -58,7 +58,7 @@ public class ArticleController {
         return new ArticleResponse(articles, count);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "articles/{id}")
     public ArticleView getAuthor(@PathVariable("id") Long id) {
         List<ArticleKeyWord> articleWordTuples = articleKeyWordDao.fetchByArticleId(id);
         Long[] articleWordTuplesArray = new Long[articleWordTuples.size()];
