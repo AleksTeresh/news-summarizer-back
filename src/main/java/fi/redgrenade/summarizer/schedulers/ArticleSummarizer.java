@@ -5,6 +5,9 @@ import fi.redgrenade.summarizer.db.tables.pojos.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -34,16 +37,53 @@ public class ArticleSummarizer {
                 articleDao.fetchwithCreateTimeGreaterThan(referenceTimestamp);
 
         articles.forEach(p -> {
-            String articleSummary = restTemplate.postForObject(
-                    "https://localhost/api/article",
-                    p,
-                    String.class
-            );
+            String articleSummary;
+            try {
+                articleSummary = executePythonScript(p.getContent());
+            } catch (Exception e) {
+                articleSummary = "";
+            }
+
 
             Article updatedArticle = p;
             updatedArticle.setSummary(articleSummary);
 
             articleDao.update(updatedArticle);
         });
+    }
+
+    private String executePythonScript(String articleBody) throws IOException {
+        String s = null;
+        String result = "";
+
+        try {
+            String[] command = new String[]{"python", "nlu.py", articleBody, "5"};
+
+            Process p = Runtime.getRuntime().exec(command);
+
+            BufferedReader stdInput = new BufferedReader(new
+                    InputStreamReader(p.getInputStream()));
+
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(p.getErrorStream()));
+
+            // read the output from the command
+            System.out.println("Here is the standard output of the command:\n");
+            while ((s = stdInput.readLine()) != null) {
+                result += s;
+            }
+            System.out.println(result);
+
+            // read any errors from the attempted command
+//            System.out.println("Here is the standard error of the command (if any):\n");
+//            while ((s = stdError.readLine()) != null) {
+//                System.out.println(s);
+//            }
+        } catch (IOException e) {
+            System.out.println("exception happened - here's what I know: ");
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }
