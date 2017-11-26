@@ -3,6 +3,7 @@ package fi.redgrenade.summarizer.schedulers;
 import fi.redgrenade.summarizer.dao.ExArticleDao;
 import fi.redgrenade.summarizer.db.tables.pojos.Article;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -30,7 +31,7 @@ public class ArticleSummarizer {
         this.articleDao = articleDao;
     }
 
-  //     @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void summarizeArticles () {
         Timestamp referenceTimestamp = new Timestamp(new Date().getTime() - TimeUnit.MINUTES.toMillis(10000)); // TODO: change the number in braces
         List<fi.redgrenade.summarizer.db.tables.pojos.Article> articles =
@@ -57,7 +58,7 @@ public class ArticleSummarizer {
         String result = "";
 
         try {
-            String[] command = new String[]{"python", "nlu.py", articleBody, "5"};
+            String[] command = new String[]{"python", "../news-summarizer-ai/pointer-generator/make_abstract.py", articleBody};
 
             Process p = Runtime.getRuntime().exec(command);
 
