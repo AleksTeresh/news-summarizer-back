@@ -67,7 +67,7 @@ public class ArticleView {
                 article.getId(),
                 article.getHeader(),
                 article.getContent(),
-                article.getSummary(),
+                article.getSummary().length() < 3 ? article.getSummary() : article.getSummary().substring(1, article.getSummary().length() - 1),
                 article.getTimestamp().getTime(),
                 keyWords,
                 article.getCategory(),

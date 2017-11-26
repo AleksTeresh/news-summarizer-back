@@ -22,7 +22,7 @@ public class SummaryView {
             String emotions,
             String tags
     ) {
-        this.summary = summary;
+        this.summary = summary.length() < 3 ? summary : summary.substring(1, summary.length() - 1);
         this.emotions = emotions;
         this.tags = tags;
     }
