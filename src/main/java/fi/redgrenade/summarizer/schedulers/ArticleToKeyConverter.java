@@ -134,11 +134,11 @@ public class ArticleToKeyConverter {
                     InputStreamReader(p.getErrorStream()));
 
             // read the output from the command
-            System.out.println("Here is the standard output of the command:\n");
+            // System.out.println("Here is the standard output of the command:\n");
             while ((s = stdInput.readLine()) != null) {
                 result += s;
             }
-            System.out.println(result);
+            // System.out.println(result);
 
             // read any errors from the attempted command
 //            System.out.println("Here is the standard error of the command (if any):\n");
@@ -169,11 +169,11 @@ public class ArticleToKeyConverter {
                     InputStreamReader(p.getErrorStream()));
 
             // read the output from the command
-            System.out.println("Here is the standard output of the command:\n");
+            // System.out.println("Here is the standard output of the command:\n");
             while ((s = stdInput.readLine()) != null) {
                 result += s;
             }
-            System.out.println(result);
+            // System.out.println(result);
 
             // read any errors from the attempted command
 //            System.out.println("Here is the standard error of the command (if any):\n");

@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,9 +34,11 @@ public class ArticleSummarizer {
 
     @Scheduled(cron = "0 * * * * *")
     public void summarizeArticles () {
-        Timestamp referenceTimestamp = new Timestamp(new Date().getTime() - TimeUnit.MINUTES.toMillis(1));
+        Timestamp referenceTimestamp = new Timestamp(new Date().getTime() - TimeUnit.MINUTES.toMillis(60000));
+        System.out.printf(referenceTimestamp.toString());
         List<fi.redgrenade.summarizer.db.tables.pojos.Article> articles =
                 articleDao.fetchwithCreateTimeGreaterThan(referenceTimestamp);
+        System.out.println(articles.size());
 
         articles.forEach(p -> {
             String articleSummary;
@@ -58,7 +61,7 @@ public class ArticleSummarizer {
         String result = "";
 
         try {
-            String[] command = new String[]{"python", "../news-summarizer-ai/pointer-generator/make_abstract.py", articleBody};
+            String[] command = new String[]{"python3", "../news-summarizer-ai/pointer-generator/make_abstract.py", articleBody};
 
             Process p = Runtime.getRuntime().exec(command);
 
@@ -69,11 +72,20 @@ public class ArticleSummarizer {
                     InputStreamReader(p.getErrorStream()));
 
             // read the output from the command
+            // System.out.println("Here is the standard output of the command:\n");
             System.out.println("Here is the standard output of the command:\n");
+            boolean passedDelimiter = false;
             while ((s = stdInput.readLine()) != null) {
-                result += s;
+
+                if (passedDelimiter) {
+                    result += s;
+                }
+                System.out.println(s + "   " + (Objects.equals(s, "DIMAAAAA")));
+                if (Objects.equals(s, "DIMAAAAA")) {
+                    passedDelimiter = true;
+                }
             }
-            System.out.println(result);
+            // System.out.println(result);
 
             // read any errors from the attempted command
 //            System.out.println("Here is the standard error of the command (if any):\n");
