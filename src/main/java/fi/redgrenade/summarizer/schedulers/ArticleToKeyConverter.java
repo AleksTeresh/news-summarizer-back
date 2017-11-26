@@ -62,12 +62,12 @@ public class ArticleToKeyConverter {
 
 
                     String keywordArrayJsonString = executePythonKeyWordScript(article.body);
-                    // String emotionsJsonString = execPythonEmoScript(article.body);
+                    String emotionsJsonString = execPythonEmoScript(article.body);
 
                     ArrayList<String> keywords = gson.fromJson(keywordArrayJsonString, ArrayList.class);
-                    // ArrayList<String> emotions = gson.fromJson(emotionsJsonString, ArrayList.class);
+                    ArrayList<String> emotions = gson.fromJson(emotionsJsonString, ArrayList.class);
 
-                    // String[] emtionsArray = new String[emotions.size()];
+                    String[] emtionsArray = new String[emotions.size()];
                     articleDao.insert(new fi.redgrenade.summarizer.db.tables.pojos.Article(
                             articleId,
                             article.body,
@@ -77,7 +77,7 @@ public class ArticleToKeyConverter {
                             null,
                             article.category,
                             article.imageurl,
-                            ""// String.join(", ", emotions.toArray(emtionsArray))
+                            String.join(", ", emotions.toArray(emtionsArray))
                     ));
 
                     for (String keyword : keywords) {
