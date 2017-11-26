@@ -4,20 +4,19 @@ import fi.redgrenade.summarizer.dao.ExArticleDao;
 import fi.redgrenade.summarizer.db.tables.pojos.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by aleksandr on 24.11.2017.
  */
+@Component
 public class ArticleSummarizer {
     private final RestTemplate restTemplate;
 
@@ -34,10 +33,9 @@ public class ArticleSummarizer {
 
     @Scheduled(cron = "0 * * * * *")
     public void summarizeArticles () {
-        Timestamp referenceTimestamp = new Timestamp(new Date().getTime() - TimeUnit.MINUTES.toMillis(60000));
-        System.out.printf(referenceTimestamp.toString());
         List<fi.redgrenade.summarizer.db.tables.pojos.Article> articles =
-                articleDao.fetchwithCreateTimeGreaterThan(referenceTimestamp);
+                articleDao.findAll();
+                // articleDao.fetchwithCreateTimeGreaterThan(referenceTimestamp);
         System.out.println(articles.size());
 
         articles.forEach(p -> {
@@ -46,13 +44,16 @@ public class ArticleSummarizer {
                 articleSummary = executePythonScript(p.getContent());
             } catch (Exception e) {
                 articleSummary = "";
+                e.printStackTrace();
+                System.out.println(e);
             }
-
 
             Article updatedArticle = p;
             updatedArticle.setSummary(articleSummary);
 
-            articleDao.update(updatedArticle);
+            articleDao.deleteById(updatedArticle.getId());
+            articleDao.insert(updatedArticle);
+            // articleDao.update(updatedArticle);
         });
     }
 
