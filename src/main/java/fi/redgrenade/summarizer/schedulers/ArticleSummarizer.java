@@ -33,7 +33,7 @@ public class ArticleSummarizer {
 
     @Scheduled(cron = "0 * * * * *")
     public void summarizeArticles () {
-        Timestamp referenceTimestamp = new Timestamp(new Date().getTime() - TimeUnit.MINUTES.toMillis(10000)); // TODO: change the number in braces
+        Timestamp referenceTimestamp = new Timestamp(new Date().getTime() - TimeUnit.MINUTES.toMillis(1));
         List<fi.redgrenade.summarizer.db.tables.pojos.Article> articles =
                 articleDao.fetchwithCreateTimeGreaterThan(referenceTimestamp);
 

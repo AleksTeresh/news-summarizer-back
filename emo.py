@@ -10,9 +10,13 @@ natural_language_understanding = NaturalLanguageUnderstandingV1(
   version="2017-02-27")
 
 response = natural_language_understanding.analyze(text=sys.argv[1], features=Features(emotion=EmotionOptions()))
-response_document = list(response.values())[2]
-emotions = response_document['document']['emotion']
-sorted_emotions = sorted(emotions.items(), key=operator.itemgetter(1), reverse=True)
+# print(response)
+response_document = list(response.values())[1]
+
+emotions = response_document['document']
+
+_emotions = emotions['emotion']
+sorted_emotions = sorted(_emotions.items(), key=operator.itemgetter(1), reverse=True)
 return_list = []
 is_there_over_limit = False
 for emotion in sorted_emotions:

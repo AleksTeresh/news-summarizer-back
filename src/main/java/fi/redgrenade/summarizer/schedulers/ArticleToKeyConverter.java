@@ -41,7 +41,7 @@ public class ArticleToKeyConverter {
         gson = new Gson();
     }
 
-    @Scheduled(cron = "* * * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void fetchArticles() {
         File[] articleFiles = getFileList();
 
@@ -55,7 +55,7 @@ public class ArticleToKeyConverter {
                         = Files.getFileAttributeView(Paths.get(filePath), BasicFileAttributeView.class)
                         .readAttributes();
 
-                if (view.creationTime().toInstant().compareTo(timeStamp.toInstant().minusSeconds(6000000)) > 0) {
+                if (view.creationTime().toInstant().compareTo(timeStamp.toInstant().minusSeconds(60)) > 0) {
                     Article article = parseArticleFile(filePath);
 
                     Long articleId = articleDao.count() + 1;
